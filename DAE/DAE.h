@@ -69,6 +69,12 @@ private:
 //constructor
 DAE::DAE(int inputSize,int hiddenSize)
 {
+#ifdef _WINDOWS_
+	//set eigen threads
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+	Eigen::setNbThreads(info.dwNumberOfProcessors);
+#endif
 	this->inputSize = inputSize;
 	this->hiddenSize = hiddenSize;
 	theta1 = randomInitialize(hiddenSize,inputSize);
@@ -111,7 +117,7 @@ MatrixXd DAE::randomInitialize(int lIn,int lOut)
 {
 	//random initialize the weight
 	int i,j;
-	double epsilon = sqrt(6.0/(this->inputSize + this->hiddenSize + 1));
+	double epsilon = sqrt(6.0/(lIn + lOut + 1));
 	MatrixXd result(lIn,lOut);
 	srand((unsigned int)time(NULL));
 	for(i = 0;i < lOut;i++)
